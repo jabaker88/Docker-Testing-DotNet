@@ -1,0 +1,41 @@
+﻿@page "/hellodatabase"
+
+<PageTitle>Hello Database</PageTitle>
+
+<h1>Hello Database</h1>
+
+<BlazorApp.Components.Modal @ref="ConfirmDialog" Message="Fetch all data?" Title="Confirm?"/>
+
+<p role="status">Database Response: @databaseMessage</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Temperature (F)</th>
+            <th>Temperature (C)</th>
+            <th>Summary</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach(var weather in weatherForecasts)
+    {
+        <tr>
+            <td>@weather.Date.ToShortDateString()</td>
+            <td>@weather.TemperatureF</td>
+            <td>@weather.TemperatureC</td>
+            <td>@weather.Summary</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<br />
+
+<p role="status">Aggregator Message: @aggregatorMessage</p>
+
+<button class="btn btn-primary" @onclick="FetchApiData">Click me to get database</button>
+
+<button class="btn btn-secondary" @onclick="FetchWeatherData">Click me to get weather</button>
+
+<button class="btn btn-success" @onclick="FetchAggregator">Click me to get Aggregator</button>

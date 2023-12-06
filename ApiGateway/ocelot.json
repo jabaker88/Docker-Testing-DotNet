@@ -1,0 +1,69 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/api/Hello/DatabaseTest",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "dockerwebapi",
+          "Port": 443
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v2/Hello/DatabaseTest",
+      "DangerousAcceptAnyServerCertificateValidator": true,
+      "SwaggerKey": "Hello",
+      "Key": "Hello"
+    },
+    {
+      "UpstreamPathTemplate": "/api/WeatherForecast/Weather",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "dockerwebapi2",
+          "Port": 443
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/WeatherForecast/Weather",
+      "DangerousAcceptAnyServerCertificateValidator": true,
+      "SwaggerKey": "Weather",
+      "Key": "Weather"
+    }
+  ],
+  "Aggregates": [
+    {
+      "RouteKeys": [
+        "Hello",
+        "Weather"
+      ],
+      "UpstreamPathTemplate": "/api/DatabaseWeatherAggregator",
+      "Aggregator": "DatabaseWeatherAggregator"
+    }
+  ],
+  "SwaggerEndpoints": [
+    {
+      "Key": "Hello",
+      "Config": [
+        {
+          "Name": "Hello Database",
+          "Version": "1.0",
+          "Url": "https://dockerwebapi/swagger/v2/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "Weather",
+      "Config": [
+        {
+          "Name": "Weather Forecast",
+          "Version": "1.0",
+          "Url": "https://dockerwebapi2/swagger/v1/swagger.json"
+        }
+      ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost"
+  }
+}
