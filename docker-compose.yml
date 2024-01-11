@@ -40,3 +40,11 @@ services:
        - "5003:443"
     networks:
       - webapi
+  demosqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+        - ACCEPT_EULA=Y
+        - SA_PASSWORD=J0HN_BA3ER
+    restart: always
+    networks:
+        - webapi 
