@@ -32,10 +32,21 @@
 
 <br />
 
-<p role="status">Aggregator Message: @aggregatorMessage</p>
+<label>Add weather type:</label>
+<input type="text" @bind="@weatherInput" />
+
+<br />
+<br />
 
 <button class="btn btn-primary" @onclick="FetchApiData">Click me to get database</button>
 
 <button class="btn btn-secondary" @onclick="FetchWeatherData">Click me to get weather</button>
 
 <button class="btn btn-success" @onclick="FetchAggregator">Click me to get Aggregator</button>
+
+<button class="btn btn-danger" @onclick="AddWeatherType">Click me to add weather type</button>
+
+<br />
+<br />
+
+<p role="status">Aggregator Message: @aggregatorMessage</p>

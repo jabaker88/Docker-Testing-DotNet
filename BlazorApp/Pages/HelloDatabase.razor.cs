@@ -12,6 +12,8 @@ namespace BlazorApp.Pages
 
         private Modal ConfirmDialog;
 
+        private string weatherInput;
+
         protected override void OnAfterRender(bool firstRender)
         {
             base.OnAfterRender(firstRender);
@@ -58,6 +60,14 @@ namespace BlazorApp.Pages
             aggregatorMessage = result?.AggregateMessage;
 
             StateHasChanged();
+        }
+
+        public async Task AddWeatherType()
+        {
+            using var httpClient = new HttpClient();
+            List<WeatherSummaryModel>? result = await httpClient.PostToGatewayAsync<WeatherSummaryModel, List<WeatherSummaryModel>>("api/WeatherForecast/Weather", new WeatherSummaryModel { Summary = weatherInput });
+
+            weatherInput = "";
         }
     }
 }

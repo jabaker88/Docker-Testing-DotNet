@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Text;
+using System.Text.Json;
 
 namespace BlazorApp.Http
 {
@@ -42,6 +43,23 @@ namespace BlazorApp.Http
                 var content = await response.Content.ReadAsStringAsync();
                 return content;
             }
+            return default;
+        }
+
+        public static async Task<TResult?> PostToGatewayAsync<TArg,TResult>(this HttpClient client, string path, TArg data)
+        {
+            var response = await client.PostAsync(BaseUrl + FixPath(path), new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json"));
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                TResult? result = JsonSerializer.Deserialize<TResult>(content, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+                return result;
+            }
+
             return default;
         }
 

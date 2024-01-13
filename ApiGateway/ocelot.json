@@ -17,7 +17,7 @@
     },
     {
       "UpstreamPathTemplate": "/api/WeatherForecast/Weather",
-      "UpstreamHttpMethod": [ "Get" ],
+      "UpstreamHttpMethod": [ "Get", "Post" ],
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
