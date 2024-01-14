@@ -1,18 +1,22 @@
 ﻿using BlazorApp.Components;
 using BlazorApp.Http;
 using Common.Model.Models;
+using Microsoft.AspNetCore.Components;
 
 namespace BlazorApp.Pages
 {
     public partial class HelloDatabase
     {
+        [Inject]
+        private IHttpClientFactory clientFactory { get; set; }
+        private HttpClient? HttpClient => clientFactory.CreateClient("Gateway");
+
         private string? databaseMessage = "Click button to get response!";
         private List<WeatherForecast> weatherForecasts = new List<WeatherForecast>();
         private string? aggregatorMessage = "";
+        private string weatherInput = "";
 
-        private Modal ConfirmDialog;
-
-        private string weatherInput;
+        private Modal? ConfirmDialog;
 
         protected override void OnAfterRender(bool firstRender)
         {
@@ -20,15 +24,14 @@ namespace BlazorApp.Pages
 
             if (firstRender)
             {
-                ConfirmDialog.OnConfirm += async () => await AfterFetchAggregatorConfirm();
+                ConfirmDialog!.OnConfirm += async () => await AfterFetchAggregatorConfirm();
             }
         }
 
         private async Task FetchApiData()
         {
             // Call the API 
-            using var httpClient = new HttpClient();
-            var result = await httpClient.GetFromGatewayAsync<HelloDatabaseModel>("api/Hello/DatabaseTest");
+            var result = await HttpClient.GetFromGatewayAsync<HelloDatabaseModel>("api/Hello/DatabaseTest");
 
             databaseMessage = result?.TimeString;
         }
@@ -36,8 +39,7 @@ namespace BlazorApp.Pages
         private async Task FetchWeatherData()
         {
             // Call the API 
-            using var httpClient = new HttpClient();
-            var result = await httpClient.GetFromGatewayAsync<WeatherForecast[]>("api/WeatherForecast/Weather");
+            var result = await HttpClient.GetFromGatewayAsync<WeatherForecast[]>("api/WeatherForecast/Weather");
 
             if(result != null)
                 weatherForecasts = result.ToList();
@@ -47,13 +49,12 @@ namespace BlazorApp.Pages
         {
             //set event handler here in the method signature or set it in OnAfterRender
             //ConfirmDialog.Open(async () => await FetchData());
-            ConfirmDialog.Open();
+            ConfirmDialog?.Open();
         }
 
         public async Task AfterFetchAggregatorConfirm()
         {
-            using var httpClient = new HttpClient();
-            var result = await httpClient.GetFromGatewayAsync<WeatherDatabaseAggregateModel>("api/DatabaseWeatherAggregator");
+            var result = await HttpClient.GetFromGatewayAsync<WeatherDatabaseAggregateModel>("api/DatabaseWeatherAggregator");
 
             databaseMessage = result?.Database?.TimeString;
             weatherForecasts = result?.Weather?.ToList() ?? new List<WeatherForecast>();
@@ -64,8 +65,7 @@ namespace BlazorApp.Pages
 
         public async Task AddWeatherType()
         {
-            using var httpClient = new HttpClient();
-            List<WeatherSummaryModel>? result = await httpClient.PostToGatewayAsync<WeatherSummaryModel, List<WeatherSummaryModel>>("api/WeatherForecast/Weather", new WeatherSummaryModel { Summary = weatherInput });
+            List<WeatherSummaryModel>? result = await HttpClient.PostToGatewayAsync<WeatherSummaryModel, List<WeatherSummaryModel>>("api/WeatherForecast/Weather", new WeatherSummaryModel { Summary = weatherInput });
 
             weatherInput = "";
         }

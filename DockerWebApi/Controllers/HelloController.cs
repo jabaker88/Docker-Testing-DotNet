@@ -1,10 +1,11 @@
 using Common.Model.Models;
 using DockerWebApi.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DockerWebApi.Controllers
 {
-    [ApiController, Route("api/v{version:apiVersion}/[controller]")]
+    [ApiController, Route("api/v{version:apiVersion}/[controller]"), Authorize]
     public class HelloController : ControllerBase
     {
         private readonly ILogger<HelloController> _logger;

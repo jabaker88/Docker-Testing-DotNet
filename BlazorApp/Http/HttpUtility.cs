@@ -5,23 +5,9 @@ namespace BlazorApp.Http
 {
     public static class HttpUtility
     {
-        private static string _baseUrl = string.Empty;
-        private static string BaseUrl
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_baseUrl))
-                {
-                    var config = Config.Configuration?.Get<AppSettings>();
-                    _baseUrl = config?.GatewayConfig?.GatewayAddress ?? string.Empty;
-                }
-                return _baseUrl;
-            }
-        }
-
         public static async Task<T?> GetFromGatewayAsync<T>(this HttpClient client, string path)
         {
-            var response = await client.GetAsync(BaseUrl + FixPath(path));
+            var response = await client.GetAsync(FixPath(path));
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
@@ -37,7 +23,7 @@ namespace BlazorApp.Http
 
         public static async Task<string?> GetFromGatewayAsync(this HttpClient client, string path)
         {
-            var response = await client.GetAsync(BaseUrl + FixPath(path));
+            var response = await client.GetAsync(FixPath(path));
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
@@ -48,7 +34,7 @@ namespace BlazorApp.Http
 
         public static async Task<TResult?> PostToGatewayAsync<TArg,TResult>(this HttpClient client, string path, TArg data)
         {
-            var response = await client.PostAsync(BaseUrl + FixPath(path), new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json"));
+            var response = await client.PostAsync(FixPath(path), new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json"));
 
             if (response.IsSuccessStatusCode)
             {
